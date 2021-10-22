@@ -8,7 +8,7 @@ const firestore = firebase.firestore();
 const addStudent = async (req, res, next) => {
     try {
         const data = req.body;
-        console.log(data)
+       // console.log(data)
         await firestore.collection('students').doc().set(data);
         res.send('Record saved successfuly');
     } catch (error) {
