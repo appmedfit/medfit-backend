@@ -1,14 +1,15 @@
 'use strict';
 
-const firebase = require('../db');
+const {firebase,admin} = require('../db');
 const Student = require('../models/student');
 const firestore = firebase.firestore();
 
 
 const addStudent = async (req, res, next) => {
+    
     try {
         const data = req.body;
-       // console.log(data)
+       
         await firestore.collection('students').doc().set(data);
         res.send('Record saved successfuly');
     } catch (error) {
@@ -17,6 +18,7 @@ const addStudent = async (req, res, next) => {
 }
 
 const getAllStudents = async (req, res, next) => {
+   
     try {
         const students = await firestore.collection('students');
         const data = await students.get();
