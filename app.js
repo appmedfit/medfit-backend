@@ -41,4 +41,4 @@ app.use(version+'/student', studentRoutes.routes);
 app.use(version+'/user', userRoutes.routes);
 
 
-app.listen(config.port, () => console.log('App is  listening on url http://localhost' + config.port));
+app.listen(config.port, () => console.log('App is  listening on Url http://localhost' + config.port));
