@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 const config = require('./config');
 const studentRoutes = require('./routes/student-routes');
 const userRoutes= require('./routes/user-routes');
+const specialtyRoutes=require('./routes/specialty-routes')
+const dotenv = require('dotenv');
 const app = express();
 const isAuthenticated=require('./auth/authenticated')
 app.use(express.json());
@@ -24,9 +26,14 @@ res.header(
     'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Credentials',
 );
 res.header('Access-Control-Allow-Credentials', 'true');
-if (req.url.split('/')[3] === 'user' ||
-    req.url.split('/')[3] === 'auth' 
+let split_num=req.url.split('/')[3]==='api'?5:3
+if (req.url.split('/')[split_num] === 'user' ||
+    req.url.split('/')[split_num] === 'auth' ||
+    req.url.split('/')[split_num] === 'specialty'
+    
+     
     ) {
+     
     next();
     } else if (req.headers.authorization) {
     isAuthenticated(req,res,next)
@@ -39,6 +46,6 @@ if (req.url.split('/')[3] === 'user' ||
 const version = '/api/v1';
 app.use(version+'/student', studentRoutes.routes);
 app.use(version+'/user', userRoutes.routes);
-
+app.use(version+'/specialty', specialtyRoutes.routes);
 
 app.listen(config.port, () => console.log('App is  listening on Url http://localhost' + config.port));

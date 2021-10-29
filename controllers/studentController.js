@@ -10,7 +10,7 @@ const addStudent = async (req, res, next) => {
     try {
         const data = req.body;
        
-        await firestore.collection('students').doc().set(data);
+        await firestore.collection('SpecialtyData').doc().set(data);
         res.send('Record saved successfuly');
     } catch (error) {
         res.status(400).send(error.message);
@@ -52,7 +52,7 @@ const getAllStudents = async (req, res, next) => {
 const getStudent = async (req, res, next) => {
     try {
         const id = req.params.id;
-        const student = await firestore.collection('students').doc(id);
+        const student = await firestore.collection('SpecialtyData').doc(id);
         const data = await student.get();
         if(!data.exists) {
             res.status(404).send('Student with the given ID not found');
@@ -68,9 +68,11 @@ const updateStudent = async (req, res, next) => {
     try {
         const id = req.params.id;
         const data = req.body;
-        const student =  await firestore.collection('students').doc(id);
-        await student.update(data);
-        res.send('Student record updated successfuly');        
+        firestore.collection('SpecialtyData').doc(id).set(data).then(()=>{
+            res.send("successfully signed up")
+         }) .catch((error) => {
+            res.status(400).send(error.message);
+        });     
     } catch (error) {
         res.status(400).send(error.message);
     }
