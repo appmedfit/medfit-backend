@@ -4,6 +4,29 @@ const {firebase,admin} = require('../db');
 const firestore = firebase.firestore();
 
 
+const generateToken=async (req, res, next) => {
+    try {
+
+          firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
+                    const id=user.uid
+                   
+
+                    let newUser={token:idToken,id:id}
+                   getUser(req, res, newUser)
+                    
+                  }).catch(function(error) {
+                    // Handle error
+                  });
+
+    }
+    
+    catch (error) {
+        res.status(400).send(error.message);
+    }
+
+}
+
+
 const signUp =  async (req, res, next) => {
     try {
         const {email,password,role,name} = req.body;
@@ -14,7 +37,7 @@ const signUp =  async (req, res, next) => {
             var user = userCredential.user;
             let data={email,role,name,id:user.uid}
              firestore.collection('users').doc(user.uid).set(data).then(()=>{
-                res.send(" successfully signed up")
+                res.send("successfully signed up")
              }) .catch((error) => {
                 res.status(400).send(error.message);
             });
@@ -29,6 +52,25 @@ const signUp =  async (req, res, next) => {
         res.status(400).send(error.message);
     }
 }
+
+
+const signOut =  async (req, res, next) => {
+    try {
+        const {email,password,role,name} = req.body;
+       
+        firebase.auth().signOut().then(() => {
+            // Sign-out successful.
+            res.send("Sign-out successful")
+          }).catch((error) => {
+            // An error happened.
+          });
+       
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+}
+
+
 
 const signIn =  (req, res, next) => {
     try {
@@ -92,6 +134,7 @@ const getUser = async (req, res, user) => {
 
 module.exports = {
     signIn,
-    signUp
+    signUp,
+    generateToken,signOut
 
 }
