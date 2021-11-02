@@ -38,7 +38,7 @@ const signUp = async (req, res, next) => {
       location,
     } = req.body;
     const collection = "users";
-    console.log(request.body);
+    // console.log(request.body);
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
@@ -60,7 +60,7 @@ const signUp = async (req, res, next) => {
                 speciality,
                 location,
               };
-        console.log(data);
+        // console.log(data);
         firestore
           .collection(collection)
           .doc(user.uid)

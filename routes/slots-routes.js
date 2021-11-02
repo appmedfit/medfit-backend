@@ -7,7 +7,8 @@ const {
   deleteAvailableSlots,
   addBooking,
   getBooking,
-} = require("../controllers/availableSlotsController");
+  updateBooking,
+} = require("../controllers/slotsController");
 
 const router = express.Router();
 router.post("/", addAvailableSlots);
@@ -17,6 +18,7 @@ router.put("/:id", updateAvailableSlots);
 // router.delete('/:id', deleteStudent);
 router.post("/booking/", addBooking);
 router.post("/bookingDetails", getBooking);
+router.post("/updateBooking", updateBooking);
 
 module.exports = {
   routes: router,

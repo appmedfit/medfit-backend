@@ -11,13 +11,13 @@ const addAvailableSlots = async (req, res, next) => {
     var batch = firestore.batch();
 
     data.forEach((doc) => {
-      console.log(doc);
-      console.log(doc?.id && doc?.id?.length > 0);
+      // console.log(doc);
+      // console.log(doc?.id && doc?.id?.length > 0);
       if (doc?.id && doc?.id?.length > 0) {
-        console.log("hi in if");
+        // console.log("hi in if");
         batch.set(firestore.collection("AvailableSlots").doc(doc.id), doc);
       } else {
-        console.log("hi in else");
+        // console.log("hi in else");
         batch.set(firestore.collection("AvailableSlots").doc(), doc);
       }
     });
@@ -63,7 +63,7 @@ const getAvailableSlots = async (req, res, next) => {
     let keys = Object.keys(reqBody);
     if (keys.length > 0) {
       keys.forEach((key) => {
-        console.log(key, "==", reqBody[key]);
+        // console.log(key, "==", reqBody[key]);
         query = query.where(key, "==", reqBody[key]);
       });
     }
@@ -103,7 +103,7 @@ const updateAvailableSlots = async (req, res, next) => {
 const addBooking = async (req, res, next) => {
   try {
     const data = req.body;
-    console.log(data);
+    // console.log(data);
     // updateAvailableSlots;
     //
 
@@ -121,6 +121,7 @@ const addBooking = async (req, res, next) => {
           prescribtion: data.prescribtion,
           patientName: data.patientName,
           doctorName: data.doctorName,
+          status: "booked",
         };
         firestore
           .collection("bookings")
@@ -149,7 +150,7 @@ const getBooking = async (req, res, next) => {
     let keys = Object.keys(reqBody);
     if (keys.length > 0) {
       keys.forEach((key) => {
-        console.log(key, "==", reqBody[key]);
+        // console.log(key, "==", reqBody[key]);
         query = query.where(key, "==", reqBody[key]);
       });
     }
@@ -166,7 +167,24 @@ const getBooking = async (req, res, next) => {
     res.status(400).send(error.message);
   }
 };
-
+const updateBooking = async (req, res, next) => {
+  try {
+    const id = req.body.id;
+    const data = req.body;
+    firestore
+      .collection("bookings")
+      .doc(id)
+      .set(data)
+      .then(() => {
+        res.send("successfully updated");
+      })
+      .catch((error) => {
+        res.status(400).send(error.message);
+      });
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
 const deleteAvailableSlots = async (req, res, next) => {
   try {
     const id = req.params.id;
@@ -185,4 +203,5 @@ module.exports = {
   deleteAvailableSlots,
   addBooking,
   getBooking,
+  updateBooking,
 };

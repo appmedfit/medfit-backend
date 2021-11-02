@@ -6,7 +6,7 @@ const config = require("./config");
 const studentRoutes = require("./routes/student-routes");
 const userRoutes = require("./routes/user-routes");
 const specialtyRoutes = require("./routes/specialty-routes");
-const availableSlotsRoutes = require("./routes/availableSlots-routes");
+const availableSlotsRoutes = require("./routes/slots-routes");
 const dotenv = require("dotenv");
 const app = express();
 const isAuthenticated = require("./auth/authenticated");
@@ -31,11 +31,6 @@ app.use((req, res, next) => {
     req.url.split("/")[split_num] === "specialty" ||
     req.url.split("/")[split_num + 1] === "getSlots"
   ) {
-    console.log(
-      "https://medfit-backend.herokuapp.com/api/v1/availableSlots/getslots".split(
-        "/"
-      )[6]
-    );
     next();
   } else if (req.headers.authorization) {
     isAuthenticated(req, res, next);
@@ -50,7 +45,7 @@ const version = "/api/v1";
 app.use(version + "/student", studentRoutes.routes);
 app.use(version + "/user", userRoutes.routes);
 app.use(version + "/specialty", specialtyRoutes.routes);
-app.use(version + "/availableSlots", availableSlotsRoutes.routes);
+app.use(version + "/slots", availableSlotsRoutes.routes);
 app.listen(config.port, () =>
   console.log("App is  listening on Url http://localhost" + config.port)
 );
