@@ -34,7 +34,7 @@ const signUp = async (req, res, next) => {
       degree,
       experience,
       registrationNumber,
-      speciality,
+      specialty,
       location,
     } = req.body;
     const collection = "users";
@@ -57,7 +57,7 @@ const signUp = async (req, res, next) => {
                 degree,
                 experience,
                 registrationNumber,
-                speciality,
+                specialty,
                 location,
               };
         // console.log(data);
