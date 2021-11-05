@@ -1,7 +1,7 @@
 "use strict";
 
-const { request } = require("express");
 const { firebase, admin } = require("../db");
+const { sendMail } = require("./emailController");
 
 const firestore = firebase.firestore();
 
@@ -120,7 +120,9 @@ const addBooking = async (req, res, next) => {
           consultancyFee: data.consultancyFee,
           prescribtion: data.prescribtion,
           patientName: data.patientName,
+          patientEmail: data.patientEmail,
           doctorName: data.doctorName,
+
           status: "booked",
         };
         firestore
@@ -128,7 +130,16 @@ const addBooking = async (req, res, next) => {
           .doc()
           .set(bookingData)
           .then(() => {
-            res.send("Booking booked successfuly");
+            sendMail(
+              {
+                patientName: data.patientName,
+                patientEmail: data.patientEmail,
+                doctorName: data.doctorName,
+                fullDate: slot.fullDate + " " + slot.detailText,
+              },
+              res,
+              next
+            );
           })
           .catch((error) => {
             res.status(400).send(error.message);

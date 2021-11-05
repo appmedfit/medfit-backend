@@ -1,14 +1,13 @@
-'use strict';
+"use strict";
 
-const {firebase,admin} = require('../db');
+const { firebase, admin } = require("../db");
 const firestore = firebase.firestore();
 
-
 // const addSpecialty = async (req, res, next) => {
-    
+
 //     try {
 //         const data = req.body;
-       
+
 //         await firestore.collection('SpecialtyData').doc().set(data);
 //         res.send('Record saved successfuly');
 //     } catch (error) {
@@ -17,7 +16,7 @@ const firestore = firebase.firestore();
 // }
 
 // const getAllspecialtys = async (req, res, next) => {
-   
+
 //     try {
 //         const specialtys = await firestore.collection('specialtys');
 //         const data = await specialtys.get();
@@ -49,19 +48,19 @@ const firestore = firebase.firestore();
 // }
 
 const getSpecialty = async (req, res, next) => {
-    try {
-        const id = req.params.id;
-        const specialty = await firestore.collection('SpecialtyData').doc(id);
-        const data = await specialty.get();
-        if(!data.exists) {
-            res.status(404).send('specialty with the given ID not found');
-        }else {
-            res.send(data.data());
-        }
-    } catch (error) {
-        res.status(400).send(error.message);
+  try {
+    const id = req.params.id;
+    const specialty = await firestore.collection("SpecialtyData").doc(id);
+    const data = await specialty.get();
+    if (!data.exists) {
+      res.status(200).send("specialty with the given ID not found");
+    } else {
+      res.send(data.data());
     }
-}
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
 
 // const updatespecialty = async (req, res, next) => {
 //     try {
@@ -69,7 +68,7 @@ const getSpecialty = async (req, res, next) => {
 //         const data = req.body;
 //         const specialty =  await firestore.collection('SpecialtyData').doc(id);
 //         await specialty.update(data);
-//         res.send('specialty record updated successfuly');        
+//         res.send('specialty record updated successfuly');
 //     } catch (error) {
 //         res.status(400).send(error.message);
 //     }
@@ -86,6 +85,5 @@ const getSpecialty = async (req, res, next) => {
 // }
 
 module.exports = {
-
-    getSpecialty
-}
+  getSpecialty,
+};
