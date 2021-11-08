@@ -62,17 +62,24 @@ const getSpecialty = async (req, res, next) => {
   }
 };
 
-// const updatespecialty = async (req, res, next) => {
-//     try {
-//         const id = req.params.id;
-//         const data = req.body;
-//         const specialty =  await firestore.collection('SpecialtyData').doc(id);
-//         await specialty.update(data);
-//         res.send('specialty record updated successfuly');
-//     } catch (error) {
-//         res.status(400).send(error.message);
-//     }
-// }
+const updatespecialty = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const data = req.body;
+    firestore
+      .collection("SpecialtyData")
+      .doc(id)
+      .set(data)
+      .then(() => {
+        res.send("updated");
+      })
+      .catch((error) => {
+        res.status(400).send(error.message);
+      });
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
 
 // const deletespecialty = async (req, res, next) => {
 //     try {
@@ -86,4 +93,5 @@ const getSpecialty = async (req, res, next) => {
 
 module.exports = {
   getSpecialty,
+  updatespecialty,
 };

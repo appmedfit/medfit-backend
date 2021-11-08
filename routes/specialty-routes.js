@@ -3,6 +3,7 @@ const {
   //    addStudent,
   //    getAllStudents,
   getSpecialty,
+  updatespecialty,
   //    updateStudent,
   //    deleteStudent
 } = require("../controllers/specilatyController");
@@ -12,7 +13,7 @@ const router = express.Router();
 // router.post('/', addStudent);
 // router.get('/', getAllStudents);
 router.get("/:id", getSpecialty);
-// router.put('/:id', updateStudent);
+router.put("/:id", updatespecialty);
 // router.delete('/:id', deleteStudent);
 
 module.exports = {

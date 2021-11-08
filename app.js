@@ -7,13 +7,14 @@ const studentRoutes = require("./routes/student-routes");
 const userRoutes = require("./routes/user-routes");
 const specialtyRoutes = require("./routes/specialty-routes");
 const availableSlotsRoutes = require("./routes/slots-routes");
+const morgan = require("morgan");
 const dotenv = require("dotenv");
 const app = express();
 const isAuthenticated = require("./auth/authenticated");
 app.use(express.json());
 app.use(cors());
 app.use(bodyParser.json());
-
+app.use(morgan("dev"));
 app.use((req, res, next) => {
   res.setHeader("Last-Modified", new Date().toUTCString());
   req.headers["if-none-match"] = "no-match-for-this";

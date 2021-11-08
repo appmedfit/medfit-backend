@@ -1,7 +1,10 @@
 "use strict";
 
 const { firebase, admin } = require("../db");
-const { sendMail } = require("./emailController");
+const {
+  sendBookingConfirmationMail,
+  sendPrescriptionMail,
+} = require("./emailController");
 
 const firestore = firebase.firestore();
 
@@ -130,12 +133,12 @@ const addBooking = async (req, res, next) => {
           .doc()
           .set(bookingData)
           .then(() => {
-            sendMail(
+            sendBookingConfirmationMail(
               {
                 patientName: data.patientName,
                 patientEmail: data.patientEmail,
                 doctorName: data.doctorName,
-                fullDate: slot.fullDate + " " + slot.detailText,
+                fullDate: slot.fullDate,
               },
               res,
               next
@@ -182,12 +185,27 @@ const updateBooking = async (req, res, next) => {
   try {
     const id = req.body.id;
     const data = req.body;
+    console.log("kkk");
     firestore
       .collection("bookings")
       .doc(id)
       .set(data)
       .then(() => {
-        res.send("successfully updated");
+        console.log("hi");
+        if (data.prescriptionStatus && data.prescriptionStatus == "completed") {
+          sendPrescriptionMail(
+            {
+              patientName: data.patientName,
+              patientEmail: data.patientEmail,
+              doctorName: data.doctorName,
+              fullDate: slot.fullDate,
+            },
+            res,
+            next
+          );
+        } else {
+          res.send("successfully updated");
+        }
       })
       .catch((error) => {
         res.status(400).send(error.message);
