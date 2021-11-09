@@ -138,7 +138,7 @@ const addBooking = async (req, res, next) => {
                 patientName: data.patientName,
                 patientEmail: data.patientEmail,
                 doctorName: data.doctorName,
-                fullDate: slot.fullDate,
+                fullDate: slot.fullDate + " " + slot.detailText,
               },
               res,
               next
@@ -185,20 +185,19 @@ const updateBooking = async (req, res, next) => {
   try {
     const id = req.body.id;
     const data = req.body;
-    console.log("kkk");
+    // console.log(data);
     firestore
       .collection("bookings")
       .doc(id)
       .set(data)
       .then(() => {
-        console.log("hi");
         if (data.prescriptionStatus && data.prescriptionStatus == "completed") {
           sendPrescriptionMail(
             {
               patientName: data.patientName,
               patientEmail: data.patientEmail,
               doctorName: data.doctorName,
-              fullDate: slot.fullDate,
+              fullDate: data.fullDate + " " + data.detailText,
             },
             res,
             next
@@ -224,6 +223,85 @@ const deleteAvailableSlots = async (req, res, next) => {
   }
 };
 
+const nextSevenDaysSlots = async (req, res, next) => {
+  try {
+    const AvailableSlots = await firestore.collection("AvailableSlots");
+    let availableSlotsQuery = AvailableSlots;
+    availableSlotsQuery = availableSlotsQuery
+      .where("doctorId", "==", req.body.doctorId)
+      .where("fullDate", "in", getNextSevenDays());
+
+    availableSlotsQuery.get().then((availableSlotsQuerySnapshot) => {
+      const slotsdata = availableSlotsQuerySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      res.send(slotsdata);
+    });
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
+
+function getNextSevenDays() {
+  var aryDates = [];
+  var daysToAdd = 6;
+  var startDate = new Date();
+  for (var i = 0; i <= daysToAdd; i++) {
+    var currentDate = new Date();
+    currentDate.setDate(startDate.getDate() + i);
+    var fullDate =
+      DayAsString(currentDate.getDay()) +
+      ", " +
+      currentDate.getDate() +
+      " " +
+      MonthAsString(currentDate.getMonth()) +
+      " " +
+      currentDate.getFullYear();
+    var dayName = DayAsString(currentDate.getDay());
+    var day =
+      currentDate.getDate() < 10
+        ? "0" + currentDate.getDate()
+        : "" + currentDate.getDate();
+    // var datObj = { fullDate, dayName, day };
+    aryDates.push(fullDate);
+  }
+
+  return aryDates;
+}
+
+function MonthAsString(monthIndex) {
+  var d = new Date();
+  var month = new Array();
+  month[0] = "January";
+  month[1] = "February";
+  month[2] = "March";
+  month[3] = "April";
+  month[4] = "May";
+  month[5] = "June";
+  month[6] = "July";
+  month[7] = "August";
+  month[8] = "September";
+  month[9] = "October";
+  month[10] = "November";
+  month[11] = "December";
+
+  return month[monthIndex];
+}
+
+function DayAsString(dayIndex) {
+  var weekdays = new Array(7);
+  weekdays[0] = "Sun";
+  weekdays[1] = "Mon";
+  weekdays[2] = "Tue";
+  weekdays[3] = "Wed";
+  weekdays[4] = "Thu";
+  weekdays[5] = "Fri";
+  weekdays[6] = "Sat";
+
+  return weekdays[dayIndex];
+}
+
 module.exports = {
   addAvailableSlots,
   getAllAvailableSlots,
@@ -233,4 +311,5 @@ module.exports = {
   addBooking,
   getBooking,
   updateBooking,
+  nextSevenDaysSlots,
 };

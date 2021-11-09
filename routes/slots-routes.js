@@ -8,6 +8,7 @@ const {
   addBooking,
   getBooking,
   updateBooking,
+  nextSevenDaysSlots,
 } = require("../controllers/slotsController");
 
 const router = express.Router();
@@ -19,7 +20,7 @@ router.put("/:id", updateAvailableSlots);
 router.post("/booking/", addBooking);
 router.post("/bookingDetails", getBooking);
 router.post("/updateBooking", updateBooking);
-
+router.post("/nextSevenDaysSlots", nextSevenDaysSlots);
 module.exports = {
   routes: router,
 };

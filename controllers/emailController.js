@@ -20,7 +20,7 @@ const sendBookingConfirmationMail = async (options, res, next) => {
             </div>
         `,
     };
-    transport.sendBookingConfirmationMail(mailOptions, function (err, info) {
+    transport.sendMail(mailOptions, function (err, info) {
       if (err) {
         console.log(err);
       } else {
@@ -50,7 +50,7 @@ const sendPrescriptionMail = async (options, res, next) => {
             </div>
         `,
     };
-    transport.sendBookingConfirmationMail(mailOptions, function (err, info) {
+    transport.sendMail(mailOptions, function (err, info) {
       if (err) {
         console.log(err);
       } else {

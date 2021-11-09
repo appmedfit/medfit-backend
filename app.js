@@ -30,6 +30,7 @@ app.use((req, res, next) => {
     req.url.split("/")[split_num] === "user" ||
     req.url.split("/")[split_num] === "auth" ||
     req.url.split("/")[split_num] === "specialty" ||
+    req.url.split("/")[split_num] === "student" ||
     req.url.split("/")[split_num + 1] === "getSlots"
   ) {
     next();

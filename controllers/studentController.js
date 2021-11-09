@@ -48,14 +48,31 @@ const getAllStudents = async (req, res, next) => {
 
 const getStudent = async (req, res, next) => {
   try {
-    const id = req.params.id;
-    const student = await firestore.collection("SpecialtyData").doc(id);
-    const data = await student.get();
-    if (!data.exists) {
-      res.status(404).send("Student with the given ID not found");
-    } else {
-      res.send(data.data());
-    }
+    const Users = await firestore.collection("users");
+    let query = Users;
+    query = query.where("role", "==", "doctor");
+    let querySnapshot = await query.get();
+    const docData = querySnapshot.docs.map((doc) => {
+      return {
+        id: doc.id,
+        ...doc.data(),
+      };
+    });
+    const AvailableSlots = await firestore.collection("AvailableSlots");
+    let availableSlotsQuery = AvailableSlots;
+    availableSlotsQuery = availableSlotsQuery.where(
+      "fullDate",
+      "in",
+      getNextSevenDays()
+    );
+
+    availableSlotsQuery.get().then((availableSlotsQuerySnapshot) => {
+      const slotsdata = availableSlotsQuerySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      res.send({ docData, slotsdata });
+    });
   } catch (error) {
     res.status(400).send(error.message);
   }
@@ -97,3 +114,62 @@ module.exports = {
   updateStudent,
   deleteStudent,
 };
+
+function getNextSevenDays() {
+  var aryDates = [];
+  var daysToAdd = 6;
+  var startDate = new Date();
+  for (var i = 0; i <= daysToAdd; i++) {
+    var currentDate = new Date();
+    currentDate.setDate(startDate.getDate() + i);
+    var fullDate =
+      DayAsString(currentDate.getDay()) +
+      ", " +
+      currentDate.getDate() +
+      " " +
+      MonthAsString(currentDate.getMonth()) +
+      " " +
+      currentDate.getFullYear();
+    var dayName = DayAsString(currentDate.getDay());
+    var day =
+      currentDate.getDate() < 10
+        ? "0" + currentDate.getDate()
+        : "" + currentDate.getDate();
+    // var datObj = { fullDate, dayName, day };
+    aryDates.push(fullDate);
+  }
+
+  return aryDates;
+}
+
+function MonthAsString(monthIndex) {
+  var d = new Date();
+  var month = new Array();
+  month[0] = "January";
+  month[1] = "February";
+  month[2] = "March";
+  month[3] = "April";
+  month[4] = "May";
+  month[5] = "June";
+  month[6] = "July";
+  month[7] = "August";
+  month[8] = "September";
+  month[9] = "October";
+  month[10] = "November";
+  month[11] = "December";
+
+  return month[monthIndex];
+}
+
+function DayAsString(dayIndex) {
+  var weekdays = new Array(7);
+  weekdays[0] = "Sun";
+  weekdays[1] = "Mon";
+  weekdays[2] = "Tue";
+  weekdays[3] = "Wed";
+  weekdays[4] = "Thu";
+  weekdays[5] = "Fri";
+  weekdays[6] = "Sat";
+
+  return weekdays[dayIndex];
+}
