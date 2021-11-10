@@ -19,6 +19,8 @@ const {
   EMAIL_PASSWORD,
   SMTP_PORT,
   SMTP_HOST,
+  APIKey,
+  APISecret,
 } = process.env;
 
 assert(PORT, "PORT is required");
@@ -45,5 +47,9 @@ module.exports = {
       user: EMAIL_USERNAME,
       pass: EMAIL_PASSWORD,
     },
+  },
+  zoomConfig: {
+    apiKey: APIKey,
+    apiSecret: APISecret,
   },
 };

@@ -192,7 +192,7 @@ const getUsersWithCondition = async (req, res, next) => {
     let keys = Object.keys(reqBody);
     if (keys.length > 0) {
       keys.forEach((key) => {
-        console.log(key, "==", reqBody[key]);
+        // console.log(key, "==", reqBody[key]);
         query = query.where(key, "==", reqBody[key]);
       });
     }

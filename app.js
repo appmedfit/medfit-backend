@@ -7,6 +7,7 @@ const studentRoutes = require("./routes/student-routes");
 const userRoutes = require("./routes/user-routes");
 const specialtyRoutes = require("./routes/specialty-routes");
 const availableSlotsRoutes = require("./routes/slots-routes");
+const zoomMeetingRouter = require("./routes/zoom-routes");
 const morgan = require("morgan");
 const dotenv = require("dotenv");
 const app = express();
@@ -30,7 +31,7 @@ app.use((req, res, next) => {
     req.url.split("/")[split_num] === "user" ||
     req.url.split("/")[split_num] === "auth" ||
     req.url.split("/")[split_num] === "specialty" ||
-    req.url.split("/")[split_num] === "student" ||
+    req.url.split("/")[split_num] === "zoom" ||
     req.url.split("/")[split_num + 1] === "getSlots"
   ) {
     next();
@@ -48,6 +49,8 @@ app.use(version + "/student", studentRoutes.routes);
 app.use(version + "/user", userRoutes.routes);
 app.use(version + "/specialty", specialtyRoutes.routes);
 app.use(version + "/slots", availableSlotsRoutes.routes);
+app.use(version + "/zoom", zoomMeetingRouter.routes);
+
 app.listen(config.port, () =>
   console.log("App is  listening on Url http://localhost" + config.port)
 );

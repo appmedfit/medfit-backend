@@ -1,10 +1,13 @@
 "use strict";
 
 const { firebase, admin } = require("../db");
+const { sortByTime } = require("../helpers/helper");
+
 const {
   sendBookingConfirmationMail,
   sendPrescriptionMail,
 } = require("./emailController");
+const { createZoomMeetinglink } = require("./zoomController");
 
 const firestore = firebase.firestore();
 
@@ -125,27 +128,40 @@ const addBooking = async (req, res, next) => {
           patientName: data.patientName,
           patientEmail: data.patientEmail,
           doctorName: data.doctorName,
-
+          doctorEmail: data.doctor.email,
           status: "booked",
         };
-        firestore
-          .collection("bookings")
-          .doc()
-          .set(bookingData)
-          .then(() => {
-            sendBookingConfirmationMail(
-              {
-                patientName: data.patientName,
-                patientEmail: data.patientEmail,
-                doctorName: data.doctorName,
-                fullDate: slot.fullDate + " " + slot.detailText,
-              },
-              res,
-              next
-            );
+
+        createZoomMeetinglink({ mail: "appmedfit@gmail.com" })
+          .then((response) => {
+            bookingData.zoomUrl = response.join_url;
+            firestore
+              .collection("bookings")
+              .doc()
+              .set(bookingData)
+              .then(() => {
+                sendBookingConfirmationMail({
+                  patientName: data.patientName,
+                  patientEmail: data.patientEmail,
+                  doctorName: data.doctorName,
+                  fullDate: slot.fullDate + " " + slot.detailText,
+                  zoomUrl: response.join_url,
+                })
+                  .then((inf) => {
+                    console.log("info", inf);
+                    res.send("Slot Booked Successfully");
+                  })
+                  .catch((error) => {
+                    console.log("err1", error);
+                    res.status(400).send(error);
+                  });
+              })
+              .catch((error) => {
+                res.status(400).send(error.message);
+              });
           })
-          .catch((error) => {
-            res.status(400).send(error.message);
+          .catch((err) => {
+            console.log(err);
           });
       })
       .catch((error) => {
@@ -164,17 +180,20 @@ const getBooking = async (req, res, next) => {
     let keys = Object.keys(reqBody);
     if (keys.length > 0) {
       keys.forEach((key) => {
-        // console.log(key, "==", reqBody[key]);
         query = query.where(key, "==", reqBody[key]);
       });
     }
 
     query.get().then((querySnapshot) => {
-      const data = querySnapshot.docs.map((doc) => ({
+      let data = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-
+      // console.log(data[5]);
+      data = data.sort((slot1, slot2) => {
+        return sortByTime(slot1.SlotDateTime, slot2.SlotDateTime);
+      });
+      // console.log(data[5]);
       res.send(data);
     });
   } catch (error) {
@@ -192,24 +211,30 @@ const updateBooking = async (req, res, next) => {
       .set(data)
       .then(() => {
         if (data.prescriptionStatus && data.prescriptionStatus == "completed") {
-          sendPrescriptionMail(
-            {
-              patientName: data.patientName,
-              patientEmail: data.patientEmail,
-              doctorName: data.doctorName,
-              fullDate: data.fullDate + " " + data.detailText,
-            },
-            res,
-            next
-          );
+          sendPrescriptionMail({
+            patientName: data.patientName,
+            patientEmail: data.patientEmail,
+            doctorName: data.doctorName,
+            fullDate: data.fullDate + " " + data.detailText,
+          })
+            .then((inf) => {
+              console.log("info", inf);
+              res.send("successfully updated");
+            })
+            .catch((error) => {
+              console.log("err1", error);
+              res.status(400).send(error);
+            });
         } else {
           res.send("successfully updated");
         }
       })
       .catch((error) => {
+        console.log("err2", error);
         res.status(400).send(error.message);
       });
   } catch (error) {
+    console.log("err3", error);
     res.status(400).send(error.message);
   }
 };
