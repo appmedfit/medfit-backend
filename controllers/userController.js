@@ -37,6 +37,14 @@ const signUp = async (req, res, next) => {
       specialty,
       location,
     } = req.body;
+    const extraCols = {
+      name: "",
+      email: "",
+      gender: "",
+      phone: "",
+      dob: "",
+      workEmail: "",
+    };
     const collection = "users";
     // console.log(request.body);
     firebase
@@ -47,7 +55,14 @@ const signUp = async (req, res, next) => {
         var user = userCredential.user;
         let data =
           role == "user"
-            ? { email, role, name, id: user.uid }
+            ? {
+                email,
+                role,
+                name,
+                id: user.uid,
+                ...extraCols,
+                verificationStatus: "verified",
+              }
             : {
                 email,
                 id: user.uid,
@@ -59,6 +74,8 @@ const signUp = async (req, res, next) => {
                 registrationNumber,
                 specialty,
                 location,
+                verificationStatus: "pending",
+                ...extraCols,
               };
         // console.log(data);
         firestore
