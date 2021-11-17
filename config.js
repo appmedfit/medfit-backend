@@ -21,6 +21,8 @@ const {
   SMTP_HOST,
   APIKey,
   APISecret,
+  razorpay_key_id,
+  razorpzy_key_secret,
 } = process.env;
 
 assert(PORT, "PORT is required");
@@ -51,5 +53,9 @@ module.exports = {
   zoomConfig: {
     apiKey: APIKey,
     apiSecret: APISecret,
+  },
+  razorPayConfig: {
+    key_id: razorpay_key_id,
+    key_secret: razorpzy_key_secret,
   },
 };

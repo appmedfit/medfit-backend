@@ -130,6 +130,7 @@ const addBooking = async (req, res, next) => {
           doctorName: data.doctorName,
           doctorEmail: data.doctor.email,
           status: "booked",
+          paymentInfo: data.paymentInfo,
         };
 
         createZoomMeetinglink({ mail: "appmedfit@gmail.com" })

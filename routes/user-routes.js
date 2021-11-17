@@ -3,6 +3,7 @@ const {
   signUp,
   signIn,
   generateToken,
+  addUser,
   signOut,
   updateUser,
   getUsersWithCondition,
@@ -16,6 +17,8 @@ router.post("/signIn", signIn);
 router.post("/signUp", signUp);
 
 router.post("/signOut", signOut);
+
+router.post("/addUser", addUser);
 router.post("/updateUser", updateUser);
 router.post("/getUsersWithCondition", getUsersWithCondition);
 

@@ -81,7 +81,7 @@ const signUp = async (req, res, next) => {
   }
 };
 
-const updateUser = async (req, res, next) => {
+const addUser = async (req, res, next) => {
   try {
     const { email, uid, role, name } = req.body;
 
@@ -105,7 +105,29 @@ const updateUser = async (req, res, next) => {
     res.status(400).send(error.message);
   }
 };
+const updateUser = async (req, res, next) => {
+  try {
+    const { id } = req.body;
 
+    const collection = "users";
+    let data = { ...req.body };
+
+    console.log("data", data);
+    firestore
+      .collection(collection)
+      .doc(id)
+      .update(data)
+      .then(() => {
+        res.send({ data: "updated successfully" });
+      })
+      .catch((error) => {
+        res.status(400).send(error.message);
+      });
+    // ...
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
 const signOut = async (req, res, next) => {
   try {
     const { email, password, role, name } = req.body;
@@ -237,6 +259,7 @@ module.exports = {
   signUp,
   generateToken,
   signOut,
+  addUser,
   updateUser,
   getUsersWithCondition,
   updateConsultancyFee,
