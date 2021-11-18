@@ -23,6 +23,7 @@ const {
   APISecret,
   razorpay_key_id,
   razorpzy_key_secret,
+  BUCKET_URL,
 } = process.env;
 
 assert(PORT, "PORT is required");
@@ -58,4 +59,6 @@ module.exports = {
     key_id: razorpay_key_id,
     key_secret: razorpzy_key_secret,
   },
+  BUCKET_URL: BUCKET_URL,
+  DATABASE_URL: DATABASE_URL,
 };
