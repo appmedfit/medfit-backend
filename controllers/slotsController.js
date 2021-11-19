@@ -209,7 +209,7 @@ const updateBooking = async (req, res, next) => {
     firestore
       .collection("bookings")
       .doc(id)
-      .set(data)
+      .update(data)
       .then(() => {
         if (data.prescriptionStatus && data.prescriptionStatus == "completed") {
           sendPrescriptionMail({

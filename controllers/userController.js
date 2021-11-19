@@ -38,8 +38,6 @@ const signUp = async (req, res, next) => {
       location,
     } = req.body;
     const extraCols = {
-      name: "",
-      email: "",
       gender: "",
       phone: "",
       dob: "",

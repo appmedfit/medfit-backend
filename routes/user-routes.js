@@ -18,8 +18,8 @@ router.post("/signUp", signUp);
 
 router.post("/signOut", signOut);
 
-router.post("/addUser", addUser);
-router.post("/updateUser", updateUser);
+router.post("/add", addUser);
+router.post("/update", updateUser);
 router.post("/getUsersWithCondition", getUsersWithCondition);
 
 router.post("/updateConsultancyFee", updateConsultancyFee);

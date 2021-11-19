@@ -11,6 +11,7 @@ const availableSlotsRoutes = require("./routes/slots-routes");
 const zoomMeetingRouter = require("./routes/zoom-routes");
 const RazorpayRouter = require("./routes/razor-pay-routes");
 const fileUploadRouter = require("./routes/file-upload-routes");
+const reportsRouter = require("./routes/reports-routes");
 const morgan = require("morgan");
 const dotenv = require("dotenv");
 const app = express();
@@ -57,10 +58,9 @@ app.use(version + "/user", userRoutes.routes);
 app.use(version + "/specialty", specialtyRoutes.routes);
 app.use(version + "/slots", availableSlotsRoutes.routes);
 app.use(version + "/zoom", zoomMeetingRouter.routes);
-
 app.use(version + "/razorpay", RazorpayRouter.routes);
 app.use(version + "/fileupload", fileUploadRouter.routes);
-
+app.use(version + "/reports", reportsRouter.routes);
 app.listen(config.port, () =>
   console.log("App is  listening on Url http://localhost" + config.port)
 );
