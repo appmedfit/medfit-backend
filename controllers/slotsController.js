@@ -133,7 +133,7 @@ const addBooking = async (req, res, next) => {
           paymentInfo: data.paymentInfo,
         };
 
-        createZoomMeetinglink({ mail: "appmedfit@gmail.com" })
+        createZoomMeetinglink({ mail: "appmedfitdoctor@gmail.com" })
           .then((response) => {
             bookingData.zoomUrl = response.join_url;
             firestore
