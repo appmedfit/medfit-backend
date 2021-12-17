@@ -12,7 +12,7 @@ Welcome! we hope you enjoy the site as much as we enjoyed making it.
 
 <br/>
 
-# Table of Content
+# Table of Contents
 
 1. [Demo](#demo)
 2. [Installation](#installation)
@@ -65,13 +65,13 @@ Test Credentials:
 
 We tried to use a completely modern tech stack while testing out some new technologies that we had never used before. This resulted in a fast, performant, and easily-extensible web app that should be fairly future-proof for the coming next several years. We used:
 
-- [ReactJs](https://reactjs.org/)
-- [React-Bootstrap](https://react-bootstrap.github.io/)
+
 - [NodeJs](https://nodejs.org/en/docs/)
 - [Firebase](https://firebase.google.com/docs)
 - [Axios](https://axios-http.com/docs/intro)
-- [Zoom](https://marketplace.zoom.us/docs/api-reference/zoom-api)
-- [Razorpay](https://razorpay.com/docs/)
+- [ExpressJS](https://expressjs.com/)
+- [Zoom API](https://marketplace.zoom.us/docs/api-reference/zoom-api)
+- [Razorpay API](https://razorpay.com/docs/)
 
 <br/>
 
