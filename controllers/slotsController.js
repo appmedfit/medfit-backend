@@ -108,6 +108,7 @@ const updateAvailableSlots = async (req, res, next) => {
 
 const addBooking = async (req, res, next) => {
   try {
+    console.log("in add booking");
     const data = req.body;
     // console.log(data);
     // updateAvailableSlots;
@@ -136,11 +137,13 @@ const addBooking = async (req, res, next) => {
         createZoomMeetinglink({ mail: "appmedfit@gmail.com" })
           .then((response) => {
             bookingData.zoomUrl = response.join_url;
+            console.log("zoom url createdd", bookingData.zoomUrl);
             firestore
               .collection("bookings")
               .doc()
               .set(bookingData)
               .then(() => {
+                console.log("booking ok");
                 sendBookingConfirmationMail({
                   patientName: data.patientName,
                   patientEmail: data.patientEmail,
@@ -153,7 +156,7 @@ const addBooking = async (req, res, next) => {
                     res.send("Slot Booked Successfully");
                   })
                   .catch((error) => {
-                    console.log("err1", error);
+                    console.log("err in sendi", error);
                     res.status(400).send(error);
                   });
               })
@@ -212,6 +215,7 @@ const updateBooking = async (req, res, next) => {
       .update(data)
       .then(() => {
         if (data.prescriptionStatus && data.prescriptionStatus == "completed") {
+          console.log("updaatexwx");
           sendPrescriptionMail({
             patientName: data.patientName,
             patientEmail: data.patientEmail,

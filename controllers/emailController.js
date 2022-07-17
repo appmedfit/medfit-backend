@@ -3,6 +3,7 @@ const nodemailer = require("nodemailer");
 let transport = nodemailer.createTransport(config.transportOptions);
 
 const sendBookingConfirmationMail = async (options) => {
+  console.log(options);
   const mailOptions = {
     from: "appmedfit@gmail.com", // Sender address
     to: options.patientEmail, // List of recipients
@@ -24,6 +25,7 @@ const sendBookingConfirmationMail = async (options) => {
   return new Promise((resolve, reject) => {
     transport.sendMail(mailOptions, function (err, info) {
       if (err) {
+        console.log("err herre in mail");
         reject(err);
       } else {
         resolve("Mail sent Successfully");

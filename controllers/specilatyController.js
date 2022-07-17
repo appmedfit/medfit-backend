@@ -62,6 +62,30 @@ const getSpecialty = async (req, res, next) => {
   }
 };
 
+const getAllSpecialties = async (req, res, next) => {
+  try {
+    const AvailableSlots = await firestore.collection("SpecialtyData");
+    let query = AvailableSlots;
+    let reqBody = req.body ? req.body : {};
+    let keys = Object.keys(reqBody);
+    if (keys.length > 0) {
+      keys.forEach((key) => {
+        query = query.where(key, "==", reqBody[key]);
+      });
+    }
+
+    query.get().then((querySnapshot) => {
+      let data = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      res.send(data);
+    });
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
+
 const updatespecialty = async (req, res, next) => {
   try {
     const id = req.params.id;
@@ -94,4 +118,5 @@ const updatespecialty = async (req, res, next) => {
 module.exports = {
   getSpecialty,
   updatespecialty,
+  getAllSpecialties,
 };
